@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_title">USC Films</string>
+    <string name="top_rated">Top-Rated</string>
+    <string name="popular">Popular</string>
+    <string name="no_internet">No internet connection.</string>
+    <string name="movie_fragment">Movies</string>
+    <string name="tv_fragment">TV Shows</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="watchlist">Watchlist</string>
+    <string name="footer">Powered by TMDB\nDeveloped by Ashutosh Gupta</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
