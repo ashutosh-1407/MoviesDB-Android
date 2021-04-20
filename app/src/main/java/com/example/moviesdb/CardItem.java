@@ -1,13 +1,19 @@
 package com.example.moviesdb;
 
 public class CardItem {
-    private int mImageResource;
+    private String mImgUrl;
+    private int mId;
 
-    public CardItem(int imageResource) {
-        mImageResource = imageResource;
+    public CardItem(String imgUrl, int id) {
+        mImgUrl = imgUrl;
+        mId = id;
     }
 
-    public int getImageResource() {
-        return mImageResource;
+    public String getImgUrl() {
+        return mImgUrl;
+    }
+
+    public int getId() {
+        return mId;
     }
 }

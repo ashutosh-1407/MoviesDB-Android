@@ -28,13 +28,18 @@ public class MainActivity extends AppCompatActivity {
 
         homeLayout = findViewById(R.id.home);
         searchLayout = findViewById(R.id.search);
+        MovieTVFragment mediaFragment = MovieTVFragment.newInstance("movie");
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content, mediaFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
 
         homeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MovieTVFragment movieFragment = new MovieTVFragment();
+                MovieTVFragment mediaFragment = MovieTVFragment.newInstance("movie");
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.content, movieFragment);
+                transaction.replace(R.id.content, mediaFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }

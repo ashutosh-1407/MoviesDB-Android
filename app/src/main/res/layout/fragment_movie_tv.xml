@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/progress_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+<LinearLayout
+    android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/black"
     android:orientation="vertical"
-    tools:context=".MovieTVFragment">
+    tools:context=".MovieTVFragment"
+    android:visibility="invisible">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -35,6 +47,7 @@
             android:textSize="25sp" />
 
         <TextView
+            android:id="@+id/movie_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -44,6 +57,7 @@
             android:textSize="15sp" />
 
         <TextView
+            android:id="@+id/tv_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -92,7 +106,7 @@
                 android:textSize="30sp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view"
+                android:id="@+id/popular_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="horizontal" />
@@ -109,7 +123,7 @@
                 android:textSize="30sp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view1"
+                android:id="@+id/top_rated_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="horizontal" />
@@ -123,7 +137,10 @@
                 android:textAlignment="center"
                 android:textColor="@android:color/white" />
         </LinearLayout>
-    </ScrollView>
+    </ScrollView>\
+
+
 
 </LinearLayout>
 
+</RelativeLayout>

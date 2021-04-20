@@ -12,9 +12,9 @@ import com.smarteist.autoimageslider.SliderViewAdapter;
 import java.util.ArrayList;
 
 public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapterViewHolder> {
-    private ArrayList<SliderItem> sliderItems;
+    private ArrayList<CardItem> sliderItems;
 
-    public SliderAdapter(Context context, ArrayList<SliderItem> sliderItems) {
+    public SliderAdapter(Context context, ArrayList<CardItem> sliderItems) {
         this.sliderItems = sliderItems;
     }
 
@@ -26,7 +26,7 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
 
     @Override
     public void onBindViewHolder(SliderAdapter.SliderAdapterViewHolder viewHolder, int position) {
-        SliderItem currentItem = sliderItems.get(position);
+        CardItem currentItem = sliderItems.get(position);
         Glide.with(viewHolder.itemView)
                 .load(currentItem.getImgUrl())
                 .fitCenter()
@@ -38,7 +38,7 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
         return sliderItems.size();
     }
 
-    static class SliderAdapterViewHolder extends SliderViewAdapter.ViewHolder {
+    public static class SliderAdapterViewHolder extends SliderViewAdapter.ViewHolder {
         View itemView;
         ImageView imageView;
         public SliderAdapterViewHolder(View itemView) {
