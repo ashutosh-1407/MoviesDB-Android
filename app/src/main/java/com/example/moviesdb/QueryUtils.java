@@ -1,5 +1,6 @@
 package com.example.moviesdb;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +13,7 @@ public class QueryUtils {
 
     private QueryUtils() {}
 
-    public static Map<String, ArrayList<CardItem>> jsonFromResults(JSONArray jsonArray) {
+    public static Map<String, ArrayList<CardItem>> parseMediaFromResponse(JSONArray jsonArray) {
         ArrayList<CardItem> trendingCardItems = new ArrayList<>();
         ArrayList<CardItem> popularCardItems = new ArrayList<>();
         ArrayList<CardItem> topRatedCardItems = new ArrayList<>();
@@ -41,5 +42,21 @@ public class QueryUtils {
             e.printStackTrace();
         }
         return resultMap;
+    }
+
+    public static ArrayList<ReviewItem> parseReviewsFromResponse(JSONArray reviews) {
+        ArrayList<ReviewItem> reviewItems = new ArrayList<>();
+        try {
+            for (int i=0; i<reviews.length(); ++i) {
+                JSONObject jsonObject = reviews.getJSONObject(i);
+                String label = "by " + jsonObject.getString("author") + " on " + jsonObject.getString("created_at");
+                String rating = jsonObject.getInt("rating")/2 + "/5";
+                String content = jsonObject.getString("content");
+                reviewItems.add(new ReviewItem(label, rating, content));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return reviewItems;
     }
 }

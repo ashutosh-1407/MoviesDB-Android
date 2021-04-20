@@ -43,11 +43,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardAdapterVie
 
     public static class CardAdapterViewHolder extends RecyclerView.ViewHolder {
         public ImageView mMovieImage;
-        public ImageView mDeleteImage;
+        public ImageView mOptionsImage;
         public CardAdapterViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             mMovieImage = itemView.findViewById(R.id.card_image_view);
-            mDeleteImage = itemView.findViewById(R.id.options_image_view);
+            mOptionsImage = itemView.findViewById(R.id.options_image_view);
             mMovieImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -59,7 +59,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardAdapterVie
                     }
                 }
             });
-            mDeleteImage.setOnClickListener(new View.OnClickListener() {
+            mOptionsImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {

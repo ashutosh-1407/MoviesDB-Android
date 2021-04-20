@@ -112,13 +112,7 @@ public class MovieTVFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mParam1.equals("tv")) {
-                    MovieTVFragment mediaFragment = MovieTVFragment.newInstance("movie");
-                    if (getFragmentManager() != null) {
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                        transaction.replace(R.id.content, mediaFragment);
-                        transaction.addToBackStack(null);
-                        transaction.commit();
-                    }
+                    activateFragment("movie");
                 }
             }
         });
@@ -127,13 +121,7 @@ public class MovieTVFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mParam1.equals("movie")) {
-                    MovieTVFragment mediaFragment = MovieTVFragment.newInstance("tv");
-                    if (getFragmentManager() != null) {
-                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                        transaction.replace(R.id.content, mediaFragment);
-                        transaction.addToBackStack(null);
-                        transaction.commit();
-                    }
+                    activateFragment("tv");
                 }
             }
         });
@@ -147,11 +135,6 @@ public class MovieTVFragment extends Fragment {
             url = urlStart + "/apis/tvSearch";
         }
 
-
-//        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-//        progressDialog.setMessage("Loading");
-//        progressDialog.setCancelable(true);
-//        progressDialog.show();
         RequestQueue requestQueue = Volley.newRequestQueue(Objects.requireNonNull(getContext()));
 
         StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
@@ -160,15 +143,15 @@ public class MovieTVFragment extends Fragment {
                 if (response != null) {
                     try {
                         JSONArray jsonArray = new JSONArray(response);
-                        Map<String, ArrayList<CardItem>> returnedMap = QueryUtils.jsonFromResults(jsonArray);
+                        Map<String, ArrayList<CardItem>> returnedMap = QueryUtils.parseMediaFromResponse(jsonArray);
                         trendingItems = returnedMap.get("trending");
                         popularItems = returnedMap.get("popular");
                         topRatedItems = returnedMap.get("top-rated");
-                        progressBar.setVisibility(View.GONE);
-                        linearLayout.setVisibility(View.VISIBLE);
                         setSliderData(trendingItems, rootView);
                         setCardData(popularItems, rootView, "popular");
                         setCardData(topRatedItems, rootView, "top-rated");
+                        progressBar.setVisibility(View.GONE);
+                        linearLayout.setVisibility(View.VISIBLE);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -219,5 +202,14 @@ public class MovieTVFragment extends Fragment {
                 Toast.makeText(getContext(), "Options clicked", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void activateFragment(String str, SearchFragment ...fragments) {
+        MovieTVFragment mediaFragment = MovieTVFragment.newInstance(str);
+        assert getFragmentManager() != null;
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.content, fragments.length > 0 ? fragments[0] : mediaFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

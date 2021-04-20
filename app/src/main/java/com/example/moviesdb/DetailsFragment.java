@@ -43,6 +43,10 @@ public class DetailsFragment extends Fragment {
     private CardAdapter mCardAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<CardItem> recommendedItems = new ArrayList<>();
+    private RecyclerView recyclerView1;
+    private ReviewAdapter mReviewAdapter1;
+    private RecyclerView.LayoutManager mLayoutManager1;
+    private ArrayList<ReviewItem> reviewItems = new ArrayList<>();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private int mParam2;
@@ -89,6 +93,7 @@ public class DetailsFragment extends Fragment {
         final TextView genresTextView = rootView.findViewById(R.id.media_genres);
         final TextView yearTextView = rootView.findViewById(R.id.media_year);
         recyclerView = rootView.findViewById(R.id.reco_picks_recycler_view);
+        recyclerView1 = rootView.findViewById(R.id.reviews_recycler_view);
 
         String urlStart = "http://10.0.2.2:8080";
         String url = "";
@@ -118,7 +123,20 @@ public class DetailsFragment extends Fragment {
                         overviewTextView.setText(jsonObject.getString("overview"));
                         genresTextView.setText(jsonObject.getString("genres"));
                         yearTextView.setText(jsonObject.getString("year"));
-                        recommendedItems = QueryUtils.jsonFromResults(jsonObject.getJSONArray("reco_picks")).get("recommended");
+                        /* to change
+                         */
+
+                        reviewItems = QueryUtils.parseReviewsFromResponse(jsonObject.getJSONArray("reviews"));
+                        recyclerView1.setHasFixedSize(true);
+                        mLayoutManager1 = new LinearLayoutManager(getContext());
+                        mReviewAdapter1 = new ReviewAdapter(reviewItems, getContext());
+                        recyclerView1.setLayoutManager(mLayoutManager1);
+                        recyclerView1.setAdapter(mReviewAdapter1);
+
+                        /* to change
+                         */
+
+                        recommendedItems = QueryUtils.parseMediaFromResponse(jsonObject.getJSONArray("reco_picks")).get("recommended");
                         recyclerView.setHasFixedSize(true);
                         mLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
                         mCardAdapter = new CardAdapter(recommendedItems, getContext());
