@@ -96,6 +96,13 @@
         android:textSize="20sp"
         android:textColor="@android:color/holo_blue_light"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cast_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="3" />
+
     <TextView
         android:text="Reviews"
         android:layout_width="match_parent"
@@ -107,7 +114,8 @@
         android:id="@+id/reviews_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="false"/>
+        android:nestedScrollingEnabled="false"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     <TextView
         android:text="Recommended Picks"
@@ -120,7 +128,9 @@
         android:id="@+id/reco_picks_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="horizontal" />
+        android:scrollbars="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal"/>
 
 </LinearLayout>
 </androidx.core.widget.NestedScrollView>

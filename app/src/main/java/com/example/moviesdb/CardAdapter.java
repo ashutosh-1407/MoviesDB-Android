@@ -14,11 +14,11 @@ import java.util.ArrayList;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardAdapterViewHolder> {
 
-    private ArrayList<CardItem> mCardItems;
+    private ArrayList<MediaItem> mCardItems;
     private Context mContext;
     private OnItemClickListener mListener;
 
-    public CardAdapter(ArrayList<CardItem> cardItems, Context context) {
+    public CardAdapter(ArrayList<MediaItem> cardItems, Context context) {
         mCardItems = cardItems;
         mContext = context;
     }
@@ -26,13 +26,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardAdapterVie
     @NonNull
     @Override
     public CardAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.media_item, parent, false);
         return new CardAdapterViewHolder(view, mListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CardAdapterViewHolder viewHolder, int position) {
-        CardItem currentItem = mCardItems.get(position);
+        MediaItem currentItem = mCardItems.get(position);
         Picasso.with(mContext).load(currentItem.getImgUrl()).into(viewHolder.mMovieImage);
     }
 

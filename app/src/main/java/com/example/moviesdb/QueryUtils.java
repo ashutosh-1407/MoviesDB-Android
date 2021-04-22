@@ -1,7 +1,5 @@
 package com.example.moviesdb;
 
-import android.provider.ContactsContract;
-import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,25 +11,25 @@ public class QueryUtils {
 
     private QueryUtils() {}
 
-    public static Map<String, ArrayList<CardItem>> parseMediaFromResponse(JSONArray jsonArray) {
-        ArrayList<CardItem> trendingCardItems = new ArrayList<>();
-        ArrayList<CardItem> popularCardItems = new ArrayList<>();
-        ArrayList<CardItem> topRatedCardItems = new ArrayList<>();
-        ArrayList<CardItem> recommendedCardItems = new ArrayList<>();
-        Map<String, ArrayList<CardItem>> resultMap = new HashMap<>();
+    public static Map<String, ArrayList<MediaItem>> parseMediaFromResponse(JSONArray jsonArray) {
+        ArrayList<MediaItem> trendingCardItems = new ArrayList<>();
+        ArrayList<MediaItem> popularCardItems = new ArrayList<>();
+        ArrayList<MediaItem> topRatedCardItems = new ArrayList<>();
+        ArrayList<MediaItem> recommendedCardItems = new ArrayList<>();
+        Map<String, ArrayList<MediaItem>> resultMap = new HashMap<>();
         try {
             for (int i=0; i<jsonArray.length(); ++i) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String img = jsonObject.getString("poster_path");
                 int id = jsonObject.getInt("id");
                 if (jsonObject.getString("type").equals("trending")) {
-                    trendingCardItems.add(new CardItem(img, id));
+                    trendingCardItems.add(new MediaItem(img, id, "a"));
                 } else if (jsonObject.getString("type").equals("popular")) {
-                    popularCardItems.add(new CardItem(img, id));
+                    popularCardItems.add(new MediaItem(img, id, "a"));
                 } else if (jsonObject.getString("type").equals("top-rated")) {
-                    topRatedCardItems.add(new CardItem(img, id));
+                    topRatedCardItems.add(new MediaItem(img, id, "a"));
                 } else if (jsonObject.get("type").equals("recommended")) {
-                    recommendedCardItems.add(new CardItem(img, id));
+                    recommendedCardItems.add(new MediaItem(img, id, "a"));
                 }
             }
             resultMap.put("trending", trendingCardItems);
@@ -58,5 +56,20 @@ public class QueryUtils {
             e.printStackTrace();
         }
         return reviewItems;
+    }
+
+    public static ArrayList<CastItem> parseCastsFromResponse(JSONArray casts) {
+        ArrayList<CastItem> castItems = new ArrayList<>();
+        try {
+            for (int i=0; i<casts.length(); ++i) {
+                JSONObject jsonObject = casts.getJSONObject(i);
+                String img = jsonObject.getString("profile_path");
+                String name = jsonObject.getString("name");
+                castItems.add(new CastItem(img, name));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return castItems;
     }
 }

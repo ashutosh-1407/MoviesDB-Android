@@ -1,15 +1,17 @@
 package com.example.moviesdb;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,14 +41,19 @@ public class DetailsFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private RecyclerView recyclerView;
+    private RecyclerView mRecyclerView;
     private CardAdapter mCardAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private ArrayList<CardItem> recommendedItems = new ArrayList<>();
-    private RecyclerView recyclerView1;
+    private ArrayList<MediaItem> recommendedItems = new ArrayList<>();
+
+    private RecyclerView mRecyclerView1;
     private ReviewAdapter mReviewAdapter1;
-    private RecyclerView.LayoutManager mLayoutManager1;
     private ArrayList<ReviewItem> reviewItems = new ArrayList<>();
+
+    private RecyclerView mRecyclerView2;
+    private CastAdapter castAdapter;
+    private ArrayList<CastItem> castItems = new ArrayList<>();
+//    RecyclerView.LayoutManager layoutManager;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private int mParam2;
@@ -92,8 +99,9 @@ public class DetailsFragment extends Fragment {
         final TextView overviewTextView = rootView.findViewById(R.id.media_overview);
         final TextView genresTextView = rootView.findViewById(R.id.media_genres);
         final TextView yearTextView = rootView.findViewById(R.id.media_year);
-        recyclerView = rootView.findViewById(R.id.reco_picks_recycler_view);
-        recyclerView1 = rootView.findViewById(R.id.reviews_recycler_view);
+        mRecyclerView = rootView.findViewById(R.id.reco_picks_recycler_view);
+        mRecyclerView1 = rootView.findViewById(R.id.reviews_recycler_view);
+        mRecyclerView2 = rootView.findViewById(R.id.cast_recycler_view);
 
         String urlStart = "http://10.0.2.2:8080";
         String url = "";
@@ -110,6 +118,7 @@ public class DetailsFragment extends Fragment {
             public void onResponse(String response) {
                 if (response != null) {
                     try {
+                        Context context = getContext();
                         final JSONObject jsonObject = new JSONObject(response);
                         getLifecycle().addObserver(youTubePlayerView);
                         final String videoId = jsonObject.getString("trailer");
@@ -127,21 +136,23 @@ public class DetailsFragment extends Fragment {
                          */
 
                         reviewItems = QueryUtils.parseReviewsFromResponse(jsonObject.getJSONArray("reviews"));
-                        recyclerView1.setHasFixedSize(true);
-                        mLayoutManager1 = new LinearLayoutManager(getContext());
-                        mReviewAdapter1 = new ReviewAdapter(reviewItems, getContext());
-                        recyclerView1.setLayoutManager(mLayoutManager1);
-                        recyclerView1.setAdapter(mReviewAdapter1);
+                        mReviewAdapter1 = new ReviewAdapter(reviewItems, context);
+                        mRecyclerView1.setHasFixedSize(true);
+                        mRecyclerView1.setAdapter(mReviewAdapter1);
+
+                        castItems = QueryUtils.parseCastsFromResponse(jsonObject.getJSONArray("cast"));
+                        castAdapter = new CastAdapter(castItems, context);
+                        mRecyclerView2.setHasFixedSize(true);
+                        mRecyclerView2.setAdapter(castAdapter);
+
 
                         /* to change
                          */
 
                         recommendedItems = QueryUtils.parseMediaFromResponse(jsonObject.getJSONArray("reco_picks")).get("recommended");
-                        recyclerView.setHasFixedSize(true);
-                        mLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
-                        mCardAdapter = new CardAdapter(recommendedItems, getContext());
-                        recyclerView.setLayoutManager(mLayoutManager);
-                        recyclerView.setAdapter(mCardAdapter);
+                        mCardAdapter = new CardAdapter(recommendedItems, context);
+                        mRecyclerView.setHasFixedSize(true);
+                        mRecyclerView.setAdapter(mCardAdapter);
                         mCardAdapter.setOnItemClickListener(new CardAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(int position) {

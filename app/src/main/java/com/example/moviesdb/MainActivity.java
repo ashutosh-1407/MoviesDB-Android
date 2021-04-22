@@ -2,8 +2,6 @@ package com.example.moviesdb;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,6 +11,10 @@ public class MainActivity extends AppCompatActivity {
 
     LinearLayout homeLayout;
     LinearLayout searchLayout;
+    LinearLayout watchlistLayout;
+    MovieTVFragment mediaFragment;
+    SearchFragment searchFragment;
+    WatchlistFragment watchlistFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
         homeLayout = findViewById(R.id.home);
         searchLayout = findViewById(R.id.search);
+        watchlistLayout = findViewById(R.id.watchlist);
         activateFragment("movie");
 
         homeLayout.setOnClickListener(new View.OnClickListener() {
@@ -33,17 +36,32 @@ public class MainActivity extends AppCompatActivity {
         searchLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SearchFragment searchFragment = new SearchFragment();
-                activateFragment("search", searchFragment);
+                activateFragment("search");
             }
         });
 
+        watchlistLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activateFragment("watchlist");
+            }
+        });
     }
 
-    private void activateFragment(String str, SearchFragment ...fragments) {
-        MovieTVFragment mediaFragment = MovieTVFragment.newInstance(str);
+    private void activateFragment(String str) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, fragments.length > 0 ? fragments[0] : mediaFragment);
+        if (str.equals("movie") || str.equals("tv")) {
+            mediaFragment = MovieTVFragment.newInstance(str);
+            transaction.replace(R.id.content, mediaFragment);
+        }
+        else if (str.equals("search")) {
+            searchFragment = new SearchFragment();
+            transaction.replace(R.id.content, searchFragment);
+        }
+        else {
+            watchlistFragment = new WatchlistFragment();
+            transaction.replace(R.id.content, watchlistFragment);
+        }
         transaction.addToBackStack(null);
         transaction.commit();
     }

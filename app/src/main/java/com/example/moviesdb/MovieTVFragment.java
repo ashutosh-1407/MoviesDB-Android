@@ -1,21 +1,17 @@
 package com.example.moviesdb;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,11 +21,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.smarteist.autoimageslider.SliderView;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -47,15 +41,16 @@ public class MovieTVFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
 //    private static final String ARG_PARAM2 = "param2";
 
+    MovieTVFragment mediaFragment;
+
     private SliderView mSliderView;
     private SliderAdapter mSliderAdapter;
-    private ArrayList<CardItem> trendingItems = new ArrayList<>();
+    private ArrayList<MediaItem> trendingItems = new ArrayList<>();
 
-    private RecyclerView recyclerView;
+    private RecyclerView mRecyclerView;
     private CardAdapter mCardAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private ArrayList<CardItem> popularItems = new ArrayList<>();
-    private ArrayList<CardItem> topRatedItems = new ArrayList<>();
+    private ArrayList<MediaItem> popularItems = new ArrayList<>();
+    private ArrayList<MediaItem> topRatedItems = new ArrayList<>();
 
     private TextView movieTextView;
     private TextView tvTextView;
@@ -143,7 +138,7 @@ public class MovieTVFragment extends Fragment {
                 if (response != null) {
                     try {
                         JSONArray jsonArray = new JSONArray(response);
-                        Map<String, ArrayList<CardItem>> returnedMap = QueryUtils.parseMediaFromResponse(jsonArray);
+                        Map<String, ArrayList<MediaItem>> returnedMap = QueryUtils.parseMediaFromResponse(jsonArray);
                         trendingItems = returnedMap.get("trending");
                         popularItems = returnedMap.get("popular");
                         topRatedItems = returnedMap.get("top-rated");
@@ -168,9 +163,9 @@ public class MovieTVFragment extends Fragment {
         return rootView;
     }
 
-    private void setSliderData(ArrayList<CardItem> sliderItems, View rootView) {
+    private void setSliderData(ArrayList<MediaItem> sliderItems, View rootView) {
         mSliderView = rootView.findViewById(R.id.slider_view);
-        mSliderAdapter = new SliderAdapter(getContext(), sliderItems);
+        mSliderAdapter = new SliderAdapter(sliderItems, getContext());
         mSliderView.setAutoCycleDirection(SliderView.LAYOUT_DIRECTION_LTR);
         mSliderView.setSliderAdapter(mSliderAdapter);
         mSliderView.setScrollTimeInSec(3);
@@ -178,14 +173,12 @@ public class MovieTVFragment extends Fragment {
         mSliderView.startAutoCycle();
     }
 
-    private void setCardData(final ArrayList<CardItem> cardItems, View rootView, String str) {
-        if (str.equals("popular")) recyclerView = rootView.findViewById(R.id.popular_recycler_view);
-        else if (str.equals("top-rated")) recyclerView = rootView.findViewById(R.id.top_rated_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+    private void setCardData(final ArrayList<MediaItem> cardItems, final View rootView, String str) {
+        if (str.equals("popular")) mRecyclerView = rootView.findViewById(R.id.popular_recycler_view);
+        else if (str.equals("top-rated")) mRecyclerView = rootView.findViewById(R.id.top_rated_recycler_view);
         mCardAdapter = new CardAdapter(cardItems, getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(mCardAdapter);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mCardAdapter);
         mCardAdapter.setOnItemClickListener(new CardAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -199,17 +192,20 @@ public class MovieTVFragment extends Fragment {
             }
             @Override
             public void onOptionsClick(int position) {
-                Toast.makeText(getContext(), "Options clicked", Toast.LENGTH_SHORT).show();
+                PopupMenu popupMenu = new PopupMenu(getContext(), rootView.findViewById(R.id.options_image_view));
+                popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+                popupMenu.show();
             }
         });
     }
 
-    private void activateFragment(String str, SearchFragment ...fragments) {
-        MovieTVFragment mediaFragment = MovieTVFragment.newInstance(str);
-        assert getFragmentManager() != null;
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, fragments.length > 0 ? fragments[0] : mediaFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    private void activateFragment(String str) {
+        mediaFragment = MovieTVFragment.newInstance(str);
+        if (getFragmentManager() != null) {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.content, mediaFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
     }
 }
