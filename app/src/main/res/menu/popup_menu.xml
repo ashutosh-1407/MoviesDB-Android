@@ -12,7 +12,12 @@
         android:id="@+id/twitter_item"
         android:title="Share on Twitter" />
 
-    <item
-        android:id="@+id/watchlist_item"
-        android:title="Add to Watchlist" />
+<!--    <item-->
+<!--        android:id="@+id/watchlist_item_add"-->
+<!--        android:title="Add to Watchlist" />-->
+
+<!--    <item-->
+<!--        android:id="@+id/watchlist_item_remove"-->
+<!--        android:title="Remove from Watchlist"-->
+<!--        android:visible="false"/>-->
 </menu>

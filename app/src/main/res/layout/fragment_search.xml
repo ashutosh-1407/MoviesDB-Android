@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.SearchFragment"
     android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
@@ -28,17 +29,24 @@
             android:layout_height="match_parent"
             android:hint="Search movies and TV"
             android:textColor="@android:color/white"
-            android:textColorHint="@android:color/darker_gray"/>
+            android:textColorHint="@android:color/darker_gray"
+            android:background="@null"/>
 
     </LinearLayout>
-    <LinearLayout
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
+<!--        <ListView-->
+<!--            android:id="@+id/list_view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@android:color/white"/>-->
+<!--    </LinearLayout>-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/testing"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="JUST FOR TESTING"/>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </LinearLayout>

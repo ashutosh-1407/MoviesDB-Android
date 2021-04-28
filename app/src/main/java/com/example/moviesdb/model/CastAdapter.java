@@ -1,18 +1,16 @@
-package com.example.moviesdb;
+package com.example.moviesdb.model;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.smarteist.autoimageslider.SliderViewAdapter;
+import com.example.moviesdb.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -51,8 +49,8 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastAdapterVie
         TextView mTextView;
         public CastAdapterViewHolder(View itemView) {
             super(itemView);
-            mImageView = itemView.findViewById(R.id.cast_image_view);
-            mTextView = itemView.findViewById(R.id.cast_text_view);
+            mImageView = itemView.findViewById(R.id.cast_image);
+            mTextView = itemView.findViewById(R.id.cast_text);
 //            this.mItemView = itemView;
         }
     }

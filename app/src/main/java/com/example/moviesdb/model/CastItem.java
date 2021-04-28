@@ -1,4 +1,4 @@
-package com.example.moviesdb;
+package com.example.moviesdb.model;
 
 public class CastItem {
     private String mImgUrl;

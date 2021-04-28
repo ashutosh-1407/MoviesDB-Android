@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottomnav"
+    app:startDestination="@id/movieTVFragment">
+
+    <fragment
+        android:id="@+id/watchlistFragment"
+        android:name="com.example.moviesdb.fragments.WatchlistFragment"
+        android:label="WatchlistFragment" >
+        <action
+            android:id="@+id/action_watchlistFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieTVFragment"
+        android:name="com.example.moviesdb.fragments.MovieTVFragment"
+        android:label="MovieTVFragment" >
+        <action
+            android:id="@+id/action_movieTVFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+        <action
+            android:id="@+id/action_movieTVFragment_self3"
+            app:destination="@id/movieTVFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.moviesdb.fragments.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.example.moviesdb.fragments.DetailsFragment"
+        android:label="DetailsFragment" >
+        <argument
+            android:name="mediaType"
+            app:argType="string" />
+        <argument
+            android:name="mediaId"
+            app:argType="integer" />
+    </fragment>
+</navigation>

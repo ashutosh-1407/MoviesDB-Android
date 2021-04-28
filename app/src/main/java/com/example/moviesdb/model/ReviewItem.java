@@ -1,11 +1,11 @@
-package com.example.moviesdb;
+package com.example.moviesdb.model;
 
 public class ReviewItem {
     private String mLabel;
     private String mRating;
     private String mContent;
 
-    public ReviewItem(String label, String  rating, String content) {
+    public ReviewItem(String label, String rating, String content) {
         mLabel = label;
         mRating = rating;
         mContent = content;

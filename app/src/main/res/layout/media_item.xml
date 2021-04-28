@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="15dp"
-    android:layout_marginEnd="15dp"
+    android:layout_marginEnd="20dp"
     app:cardCornerRadius="10dp">
 
     <RelativeLayout
@@ -12,17 +11,26 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/card_image_view"
-            android:layout_width="100dp"
-            android:layout_height="150dp" />
+            android:id="@+id/media_image"
+            android:layout_width="120dp"
+            android:layout_height="170dp"
+            android:scaleType="fitXY"
+            android:foreground="@drawable/image_gradient"/>
 
         <ImageView
-            android:id="@+id/options_image_view"
+            android:id="@+id/media_options"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@id/card_image_view"
-            android:layout_alignBottom="@id/card_image_view"
+            android:layout_alignEnd="@id/media_image"
+            android:layout_alignBottom="@id/media_image"
             android:src="@drawable/ic_baseline_more_vert_24" />
+
+        <TextView
+            android:id="@+id/media_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/media_image"
+            android:textColor="@android:color/white"/>
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
