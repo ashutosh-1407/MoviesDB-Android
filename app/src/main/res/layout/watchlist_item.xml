@@ -21,6 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@id/media_image"
         android:layout_alignBottom="@id/media_image"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
         android:src="@drawable/ic_baseline_more_vert_24" />
 
     <TextView
@@ -28,7 +30,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/media_image"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"/>
 </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

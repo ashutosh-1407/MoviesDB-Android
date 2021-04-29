@@ -50,7 +50,9 @@ public class WatchlistAdapter extends RecyclerView.Adapter<WatchlistAdapter.Watc
     public void onBindViewHolder(@NonNull WatchlistAdapterViewHolder viewHolder, int position) {
         MediaItem currentItem = mCardItems.get(position);
         Picasso.with(mContext).load(currentItem.getImgUrl()).into(viewHolder.mMovieImage);
-        viewHolder.mName.setText(mCardItems.get(position).getType());
+        String type = mCardItems.get(position).getType();
+        if (type.equals("movie")) viewHolder.mName.setText("Movie");
+        else viewHolder.mName.setText("TV");
         viewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

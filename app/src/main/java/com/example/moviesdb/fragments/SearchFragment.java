@@ -1,19 +1,20 @@
 package com.example.moviesdb.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -21,7 +22,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.moviesdb.QueryUtils;
+import com.example.moviesdb.activity.DetailsActivity;
+import com.example.moviesdb.utility.QueryUtils;
 import com.example.moviesdb.R;
 import com.example.moviesdb.model.CardAdapter;
 import com.example.moviesdb.model.MediaItem;
@@ -87,24 +89,29 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View rootView = inflater.inflate(R.layout.fragment_search, container, false);
-        final EditText searchEditText = rootView.findViewById(R.id.search_edit_text);
+        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+//        final EditText searchEditText = rootView.findViewById(R.id.search_edit_text);
+        androidx.appcompat.widget.SearchView searchView = rootView.findViewById(R.id.search_view);
+        TextView noResultText = rootView.findViewById(R.id.search_empty_view);
+        searchView.setIconified(false);
+        searchView.setActivated(true);
+        noResultText.setVisibility(View.INVISIBLE);
         mRecyclerView = rootView.findViewById(R.id.search_recycler_view);
-        searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                RequestQueue requestQueue = Volley.newRequestQueue(Objects.requireNonNull(getContext()));
-                if (s.length() > 0) {
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                    StringRequest stringRequest = new StringRequest("http://10.0.2.2:8080/apis/search/" + s, new Response.Listener<String>() {
+            public boolean onQueryTextChange(String newText) {
+                RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
+                if (newText.length() > 2) {
+                    StringRequest stringRequest = new StringRequest("http://10.0.2.2:8080/apis/search/" + newText, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            if (response != null) {
+                            if (!response.equals("[]")) {
                                 try {
                                     JSONArray jsonArray = new JSONArray(response);
                                     mSearchItems = QueryUtils.parseSearchFromResponse(jsonArray);
@@ -115,16 +122,14 @@ public class SearchFragment extends Fragment {
                                         public void onItemClick(int position) {
                                             String mediaType = mSearchItems.get(position).getType();
                                             int mediaId = mSearchItems.get(position).getId();
-                                            final NavController navController = Navigation.findNavController(rootView);
-                                            SearchFragmentDirections.ActionSearchFragmentToDetailsFragment action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(mediaType, mediaId);
-                                            navController.navigate(action);
-//                                            DetailsFragment detailsFragment = DetailsFragment.newInstance(mSearchItems.get(position).getType(), mSearchItems.get(position).getId());
-//                                            if (getFragmentManager() != null) {
-//                                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//                                                transaction.replace(R.id.fragment, detailsFragment);
-//                                                transaction.addToBackStack(null);
-//                                                transaction.commit();
-//                                            }
+                                            Intent intent = new Intent(getContext(), DetailsActivity.class);
+                                            intent.putExtra("mediaType", mediaType);
+                                            intent.putExtra("mediaId", mediaId);
+                                            startActivity(intent);
+//                                            final NavController navController = Navigation.findNavController(rootView);
+//                                            SearchFragmentDirections.ActionSearchFragmentToDetailsFragment action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(mediaType, mediaId);
+//                                            navController.navigate(action);
+
                                         }
 
                                         @Override
@@ -132,9 +137,15 @@ public class SearchFragment extends Fragment {
 
                                         }
                                     });
+                                    mRecyclerView.setVisibility(View.VISIBLE);
+                                    noResultText.setVisibility(View.GONE);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+                            } else {
+                                mRecyclerView.setVisibility(View.INVISIBLE);
+                                noResultText.setText("No result found.");
+                                noResultText.setVisibility(View.VISIBLE);
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -147,14 +158,81 @@ public class SearchFragment extends Fragment {
                     requestQueue.add(stringRequest);
                 } else {
                     mRecyclerView.setVisibility(View.INVISIBLE);
+                    noResultText.setText("");
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
+                return false;
             }
         });
+//        searchEditText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                RequestQueue requestQueue = Volley.newRequestQueue(Objects.requireNonNull(getContext()));
+//                if (s.length() > 2) {
+//                    StringRequest stringRequest = new StringRequest("http://10.0.2.2:8080/apis/search/" + s, new Response.Listener<String>() {
+//                        @Override
+//                        public void onResponse(String response) {
+//                            Log.i("test", response);
+//                            if (!response.equals("[]")) {
+//                                try {
+//                                    JSONArray jsonArray = new JSONArray(response);
+//                                    mSearchItems = QueryUtils.parseSearchFromResponse(jsonArray);
+//                                    mSearchAdapter = new CardAdapter(mSearchItems, getContext(), "search");
+//                                    mRecyclerView.setAdapter(mSearchAdapter);
+//                                    mSearchAdapter.setOnItemClickListener(new CardAdapter.OnItemClickListener() {
+//                                        @Override
+//                                        public void onItemClick(int position) {
+//                                            String mediaType = mSearchItems.get(position).getType();
+//                                            int mediaId = mSearchItems.get(position).getId();
+//                                            Intent intent = new Intent(getContext(), DetailsActivity.class);
+//                                            intent.putExtra("mediaType", mediaType);
+//                                            intent.putExtra("mediaId", mediaId);
+//                                            startActivity(intent);
+////                                            final NavController navController = Navigation.findNavController(rootView);
+////                                            SearchFragmentDirections.ActionSearchFragmentToDetailsFragment action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(mediaType, mediaId);
+////                                            navController.navigate(action);
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onOptionsClick(int position) {
+//
+//                                        }
+//                                    });
+//                                    mRecyclerView.setVisibility(View.VISIBLE);
+//                                    noResultText.setVisibility(View.GONE);
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            } else {
+//                                mRecyclerView.setVisibility(View.INVISIBLE);
+//                                noResultText.setText("No result found.");
+//                                noResultText.setVisibility(View.VISIBLE);
+//                            }
+//                        }
+//                    }, new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            Toast.makeText(getContext(), error.toString(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//
+//                    requestQueue.add(stringRequest);
+//                } else {
+//                    mRecyclerView.setVisibility(View.INVISIBLE);
+//                    noResultText.setText("");
+//                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
 
         return rootView;
     }

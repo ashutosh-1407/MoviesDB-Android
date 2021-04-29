@@ -8,7 +8,14 @@
         <item name="backgroundColor">@android:color/black</item>
     </style>
     <style name="AppTheme.Launcher">
-        <item name="android:windowBackground">@drawable/ic_theaters_white_18dp</item>
+        <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
 
+    <style name="MyStyle">
+        <item name="android:queryHint">"Search movies and TV"</item>
+        <item name="android:textColorHint">@android:color/darker_gray</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:backgroundTint">@android:color/white</item>
+    </style>
 </resources>

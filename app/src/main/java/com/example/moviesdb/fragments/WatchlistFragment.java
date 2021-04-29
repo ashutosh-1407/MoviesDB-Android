@@ -1,12 +1,11 @@
 package com.example.moviesdb.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,9 +15,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.moviesdb.activity.DetailsActivity;
 import com.example.moviesdb.R;
 import com.example.moviesdb.helper.ItemTouchHelperCallback;
-import com.example.moviesdb.model.CardAdapter;
 import com.example.moviesdb.model.MediaItem;
 import com.example.moviesdb.model.WatchlistAdapter;
 import com.google.gson.Gson;
@@ -107,16 +106,13 @@ public class WatchlistFragment extends Fragment {
                 public void onItemClick(int position) {
                     mediaId = watchlistItems.get(position).getId();
                     mediaType = watchlistItems.get(position).getType();
-                    final NavController navController = Navigation.findNavController(rootView);
-                    WatchlistFragmentDirections.ActionWatchlistFragmentToDetailsFragment action = WatchlistFragmentDirections.actionWatchlistFragmentToDetailsFragment(mediaType, mediaId);
-                    navController.navigate(action);
-//                    DetailsFragment detailsFragment = DetailsFragment.newInstance(mediaType, mediaId);
-//                    if (getFragmentManager() != null) {
-//                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//                        transaction.replace(R.id.content, detailsFragment);
-//                        transaction.addToBackStack(null);
-//                        transaction.commit();
-//                    }
+                    Intent intent = new Intent(getContext(), DetailsActivity.class);
+                    intent.putExtra("mediaType", mediaType);
+                    intent.putExtra("mediaId", mediaId);
+                    startActivity(intent);
+//                    final NavController navController = Navigation.findNavController(rootView);
+//                    WatchlistFragmentDirections.ActionWatchlistFragmentToDetailsFragment action = WatchlistFragmentDirections.actionWatchlistFragmentToDetailsFragment(mediaType, mediaId);
+//                    navController.navigate(action);
                 }
 
                 @Override

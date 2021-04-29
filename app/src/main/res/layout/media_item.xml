@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_alignEnd="@id/media_image"
             android:layout_alignBottom="@id/media_image"
+            android:layout_marginBottom="3dp"
             android:src="@drawable/ic_baseline_more_vert_24" />
 
         <TextView

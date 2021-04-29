@@ -1,9 +1,11 @@
-package com.example.moviesdb;
+package com.example.moviesdb.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.moviesdb.R;
 
 public class ReviewsActivity extends AppCompatActivity {
 

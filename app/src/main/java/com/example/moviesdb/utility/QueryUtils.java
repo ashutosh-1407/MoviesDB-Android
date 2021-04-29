@@ -1,4 +1,4 @@
-package com.example.moviesdb;
+package com.example.moviesdb.utility;
 
 import android.accessibilityservice.AccessibilityService;
 import android.app.Activity;
@@ -113,7 +113,7 @@ public class QueryUtils {
         try {
             for (int i = 0; i < results.length(); ++i) {
                 JSONObject jsonObject = results.getJSONObject(i);
-                String year = "(" + jsonObject.getString("year") + ")";
+                String year = jsonObject.getString("year");
                 String rating = jsonObject.getString("rating");
                 String name = jsonObject.getString("name");
                 String imgURl = jsonObject.getString("backdrop_path");

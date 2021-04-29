@@ -1,22 +1,15 @@
 package com.example.moviesdb.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,14 +24,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.moviesdb.QueryUtils;
+import com.example.moviesdb.activity.DetailsActivity;
+import com.example.moviesdb.utility.QueryUtils;
 import com.example.moviesdb.R;
 import com.example.moviesdb.model.CardAdapter;
 import com.example.moviesdb.model.MediaItem;
 import com.example.moviesdb.model.SliderAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.smarteist.autoimageslider.SliderView;
 
 import org.json.JSONArray;
@@ -47,8 +39,6 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
-
-import static androidx.core.app.ActivityCompat.invalidateOptionsMenu;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -125,6 +115,7 @@ public class MovieTVFragment extends Fragment {
         tvTextView = rootView.findViewById(R.id.tv_text_view);
         TextView footerTextView = rootView.findViewById(R.id.footer);
         final ProgressBar progressBar = rootView.findViewById(R.id.progress_view);
+        final TextView loadingText = rootView.findViewById(R.id.loading_text);
         final LinearLayout linearLayout = rootView.findViewById(R.id.content);
 
         movieTextView.setOnClickListener(new View.OnClickListener() {
@@ -181,6 +172,7 @@ public class MovieTVFragment extends Fragment {
                         setCardData(popularItems, rootView, "popular");
                         setCardData(topRatedItems, rootView, "top-rated");
                         progressBar.setVisibility(View.GONE);
+                        loadingText.setVisibility(View.GONE);
                         linearLayout.setVisibility(View.VISIBLE);
                         getActivity().findViewById(R.id.bottomNavigationView).setVisibility(View.VISIBLE);
                     } catch (JSONException e) {
@@ -223,16 +215,13 @@ public class MovieTVFragment extends Fragment {
             public void onItemClick(int position) {
                 mediaId = cardItems.get(position).getId();
                 mediaType = cardItems.get(position).getType();
-                final NavController navController = Navigation.findNavController(rootView);
-                MovieTVFragmentDirections.ActionMovieTVFragmentToDetailsFragment action = MovieTVFragmentDirections.actionMovieTVFragmentToDetailsFragment(mediaType, mediaId);
-                navController.navigate(action);
-//                DetailsFragment detailsFragment = DetailsFragment.newInstance(mediaType, mediaId);
-//                if (getFragmentManager() != null) {
-//                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//                    transaction.replace(R.id.fragment, detailsFragment);
-//                    transaction.addToBackStack(null);
-//                    transaction.commit();
-//                }
+                Intent intent = new Intent(getContext(), DetailsActivity.class);
+                intent.putExtra("mediaType", mediaType);
+                intent.putExtra("mediaId", mediaId);
+                startActivity(intent);
+//                final NavController navController = Navigation.findNavController(rootView);
+//                MovieTVFragmentDirections.ActionMovieTVFragmentToDetailsFragment action = MovieTVFragmentDirections.actionMovieTVFragmentToDetailsFragment(mediaType, mediaId);
+//                navController.navigate(action);
             }
             @Override
             public void onOptionsClick(final int position) {
@@ -241,7 +230,7 @@ public class MovieTVFragment extends Fragment {
                 mediaUrl = cardItems.get(position).getImgUrl();
                 mediaName = cardItems.get(position).getName();
                 final PopupMenu popupMenu = new PopupMenu(getContext(), rootView.findViewById(R.id.media_options));
-                if (QueryUtils.checkMedia(Objects.requireNonNull(getContext()), mediaType, mediaId))
+                if (QueryUtils.checkMedia(requireContext(), mediaType, mediaId))
                     popupMenu.getMenu().add(Menu.NONE, 101, 3, "Remove from Watchlist");
                 else
                     popupMenu.getMenu().add(Menu.NONE, 102, 3, "Add to Watchlist");
@@ -259,7 +248,7 @@ public class MovieTVFragment extends Fragment {
                                 break;
                             case R.id.fb_item:
                                 data = "https://www.themoviedb.org/" + mediaType + "/" + mediaId;
-                                url = "https://www.facebook.com/sharer/sharer.php?u=" + data;
+                                url = "https://www.facebook.com/sharer.php?u=" + data;
                                 browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                                 startActivity(browserIntent);
                                 break;
@@ -270,11 +259,11 @@ public class MovieTVFragment extends Fragment {
                                 startActivity(browserIntent);
                                 break;
                             case 101:
-                                QueryUtils.removeMedia(Objects.requireNonNull(getContext()), mediaType, mediaId);
+                                QueryUtils.removeMedia(requireContext(), mediaType, mediaId);
                                 Toast.makeText(getContext(), mediaName + " was removed from Watchlist", Toast.LENGTH_LONG).show();
                                 break;
                             case 102:
-                                QueryUtils.addMedia(Objects.requireNonNull(getContext()), mediaType, mediaId, mediaUrl, mediaName);
+                                QueryUtils.addMedia(requireContext(), mediaType, mediaId, mediaUrl, mediaName);
                                 Toast.makeText(getContext(), mediaName + " was added to Watchlist" , Toast.LENGTH_SHORT).show();
                                 break;
                         }

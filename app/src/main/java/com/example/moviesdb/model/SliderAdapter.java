@@ -1,17 +1,16 @@
 package com.example.moviesdb.model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import com.bumptech.glide.Glide;
+import com.example.moviesdb.activity.DetailsActivity;
 import com.example.moviesdb.R;
-import com.example.moviesdb.fragments.MovieTVFragmentDirections;
+
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
 import java.util.ArrayList;
@@ -51,9 +50,13 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
             public void onClick(View v) {
                 String mediaType = currentItem.getType();
                 int mediaId = currentItem.getId();
-                final NavController navController = Navigation.findNavController(viewHolder.mItemView);
-                MovieTVFragmentDirections.ActionMovieTVFragmentToDetailsFragment action = MovieTVFragmentDirections.actionMovieTVFragmentToDetailsFragment(mediaType, mediaId);
-                navController.navigate(action);
+                Intent intent = new Intent(mContext, DetailsActivity.class);
+                intent.putExtra("mediaType", mediaType);
+                intent.putExtra("mediaId", mediaId);
+                mContext.startActivity(intent);
+//                final NavController navController = Navigation.findNavController(viewHolder.mItemView);
+//                MovieTVFragmentDirections.ActionMovieTVFragmentToDetailsFragment action = MovieTVFragmentDirections.actionMovieTVFragmentToDetailsFragment(mediaType, mediaId);
+//                navController.navigate(action);
             }
         });
     }

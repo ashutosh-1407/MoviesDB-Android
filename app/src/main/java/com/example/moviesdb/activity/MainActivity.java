@@ -1,4 +1,4 @@
-package com.example.moviesdb;
+package com.example.moviesdb.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.example.moviesdb.R;
 import com.example.moviesdb.fragments.MovieTVFragment;
 import com.example.moviesdb.fragments.SearchFragment;
 import com.example.moviesdb.fragments.WatchlistFragment;
@@ -33,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
+//        try {
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

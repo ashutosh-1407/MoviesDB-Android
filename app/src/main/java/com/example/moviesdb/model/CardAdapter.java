@@ -1,6 +1,9 @@
 package com.example.moviesdb.model;
 
 import android.content.Context;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -69,22 +72,22 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardAdapterVie
         MediaItem currentItem = mCardItems.get(position);
         Picasso.with(mContext).load(currentItem.getImgUrl()).into(viewHolder.mMovieImage);
         if (mPage.equals("search")) {
-            String label = mCardItems.get(position).getType() + "(" + mCardItems.get(position).getYear() + ")";
+            String label = mCardItems.get(position).getType().toUpperCase();
+            if (!mCardItems.get(position).getYear().equals("")) label+=" (" + mCardItems.get(position).getYear() + ")";
             viewHolder.mLabelTextView.setText(label);
-            viewHolder.mRatingTextView.setText(mCardItems.get(position).getRating());
-            viewHolder.mName.setText(mCardItems.get(position).getName());
-        } else if (mPage.equals("watchlist")) {
-            viewHolder.mName.setText(mCardItems.get(position).getType());
-//            viewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    final int action =  event.getAction();
-//                    if (action == MotionEvent.ACTION_DOWN)
-//                        listener.onStartDrag(viewHolder);
-//                    return false;
-//                }
-//            });
+            viewHolder.mRatingTextView.setText(mCardItems.get(position).getRating().toUpperCase());
+            String name = mCardItems.get(position).getName().toUpperCase();
+            // Enlarging the first character
+            String tempStr = name.substring(0, 1).toUpperCase() + name.substring(1);
+            SpannableString spannableString = new SpannableString(tempStr);
+            spannableString.setSpan(new RelativeSizeSpan(1.3f), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            viewHolder.mName.setText(spannableString);
         }
+//        else if (mPage.equals("watchlist")) {
+//            String tempStr = mCardItems.get(position).getType();
+//            if (tempStr.equals("movie")) viewHolder.mName.setText("Movie");
+//            else viewHolder.mName.setText("TV");
+//        }
     }
 
     @Override
