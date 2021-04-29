@@ -145,7 +145,7 @@ public class MovieTVFragment extends Fragment {
             }
         });
 
-        String urlStart = "http://10.0.2.2:8080";
+        String urlStart = QueryUtils.startUrl;
         String url = "";
 
         if (mMediatype == null || mMediatype.equals("movie")) {
@@ -156,7 +156,7 @@ public class MovieTVFragment extends Fragment {
             mMediatype = "tv";
         }
 
-        RequestQueue requestQueue = Volley.newRequestQueue(Objects.requireNonNull(getContext()));
+        RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
 
         StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
             @Override

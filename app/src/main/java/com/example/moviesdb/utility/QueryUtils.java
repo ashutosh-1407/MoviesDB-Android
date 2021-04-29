@@ -34,6 +34,7 @@ import java.util.Map;
 
 public class QueryUtils {
 
+    public static final String startUrl = "https://csci571-hw9-guptaash.azurewebsites.net";
     private QueryUtils() {
     }
 
@@ -133,8 +134,9 @@ public class QueryUtils {
         SharedPreferences sharedPreferences = context.getSharedPreferences("shared_pref", Context.MODE_PRIVATE);
         TypeToken<ArrayList<MediaItem>> token = new TypeToken<ArrayList<MediaItem>>() {
         };
-        watchlistItems = gson.fromJson(sharedPreferences.getString("values", String.valueOf(0)), token.getType());
-        if (watchlistItems != null) {
+        watchlistItems = gson.fromJson(sharedPreferences.getString("values", ""), token.getType());
+        if (watchlistItems == null) watchlistItems = new ArrayList<>();
+        if (!watchlistItems.isEmpty()) {
             int i = 0;
             for (; i < watchlistItems.size(); ++i) {
                 if (watchlistItems.get(i).getType().equals(mediaType) && watchlistItems.get(i).getId() == mediaId) {
@@ -151,22 +153,13 @@ public class QueryUtils {
         SharedPreferences sharedPreferences = context.getSharedPreferences("shared_pref", Context.MODE_PRIVATE);
         TypeToken<ArrayList<MediaItem>> token = new TypeToken<ArrayList<MediaItem>>() {
         };
-        watchlistItems = gson.fromJson(sharedPreferences.getString("values", String.valueOf(0)), token.getType());
-        if (watchlistItems != null) {
-            int i = 0;
-            for (; i < watchlistItems.size(); ++i) {
-                if (watchlistItems.get(i).getType().equals(mediaType) && watchlistItems.get(i).getId() == mediaId) {
-                    break;
-                }
-            }
-            if (i == watchlistItems.size()) {
-                watchlistItems.add(new MediaItem(mediaType, mediaUrl, mediaId, mediaName, "", ""));
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                String jsonString = gson.toJson(watchlistItems);
-                editor.putString("values", jsonString);
-                editor.apply();
-            }
-        }
+        watchlistItems = gson.fromJson(sharedPreferences.getString("values", ""), token.getType());
+        if (watchlistItems == null) watchlistItems = new ArrayList<>();
+        watchlistItems.add(new MediaItem(mediaType, mediaUrl, mediaId, mediaName, "", ""));
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String jsonString = gson.toJson(watchlistItems);
+        editor.putString("values", jsonString);
+        editor.apply();
 
     }
 
@@ -176,8 +169,9 @@ public class QueryUtils {
         SharedPreferences sharedPreferences = context.getSharedPreferences("shared_pref", Context.MODE_PRIVATE);
         TypeToken<ArrayList<MediaItem>> token = new TypeToken<ArrayList<MediaItem>>() {
         };
-        watchlistItems = gson.fromJson(sharedPreferences.getString("values", String.valueOf(0)), token.getType());
-        if (watchlistItems != null) {
+        watchlistItems = gson.fromJson(sharedPreferences.getString("values", ""), token.getType());
+        if (watchlistItems == null) watchlistItems = new ArrayList<>();
+        if (!watchlistItems.isEmpty()) {
             int i=0;
             for (; i<watchlistItems.size(); ++i) {
                 if (watchlistItems.get(i).getType().equals(mediaType) && watchlistItems.get(i).getId() == mediaId) {

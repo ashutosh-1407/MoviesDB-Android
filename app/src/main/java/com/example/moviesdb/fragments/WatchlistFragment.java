@@ -40,7 +40,7 @@ public class WatchlistFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private WatchlistAdapter mCardAdapter;
-    private ArrayList<MediaItem> watchlistItems = new ArrayList<>();
+    private ArrayList<MediaItem> watchlistItems;
 
     private TextView emptyTextView;
     ItemTouchHelper itemTouchHelper;
@@ -86,14 +86,14 @@ public class WatchlistFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_watchlist, container, false);
         mRecyclerView = rootView.findViewById(R.id.watchlist_recycler_view);
         emptyTextView = rootView.findViewById(R.id.empty_text_view);
-        final SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("shared_pref", Context.MODE_PRIVATE);
+        final SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("shared_pref", Context.MODE_PRIVATE);
         final Gson gson = new Gson();
         final TypeToken<ArrayList<MediaItem>> token = new TypeToken<ArrayList<MediaItem>>() {
         };
-        watchlistItems = gson.fromJson(sharedPreferences.getString("values", null), token.getType());
+        watchlistItems = gson.fromJson(sharedPreferences.getString("values", ""), token.getType());
+        if (watchlistItems == null) watchlistItems = new ArrayList<>();
         if (!watchlistItems.isEmpty()) {
             mRecyclerView.setHasFixedSize(true);
-
             mCardAdapter = new WatchlistAdapter(watchlistItems, getContext(), viewHolder -> itemTouchHelper.startDrag(viewHolder));
             mRecyclerView.setAdapter(mCardAdapter);
             ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(mCardAdapter);
@@ -120,7 +120,7 @@ public class WatchlistFragment extends Fragment {
                     mediaId = watchlistItems.get(position).getId();
                     mediaType = watchlistItems.get(position).getType();
                     mediaName = watchlistItems.get(position).getName();
-                    if (watchlistItems != null) {
+                    if (!watchlistItems.isEmpty()) {
                         int i=0;
                         for (; i<watchlistItems.size(); ++i) {
                             if (watchlistItems.get(i).getType().equals(mediaType) && watchlistItems.get(i).getId() == mediaId) {

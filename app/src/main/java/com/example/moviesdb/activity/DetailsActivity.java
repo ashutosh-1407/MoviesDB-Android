@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,10 +33,13 @@ import com.example.moviesdb.model.ReviewItem;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public class DetailsActivity extends AppCompatActivity {
@@ -67,6 +71,7 @@ public class DetailsActivity extends AppCompatActivity {
         mediaId = getIntent().getIntExtra("mediaId", 0);
 
         final YouTubePlayerView youTubePlayerView = findViewById(R.id.media_trailer);
+        final ImageView mediaImageView = findViewById(R.id.media_image);
         final TextView nameTextView = findViewById(R.id.media_name);
         final TextView overviewTextView = findViewById(R.id.media_overview);
         final TextView genresTextView = findViewById(R.id.media_genres);
@@ -88,7 +93,7 @@ public class DetailsActivity extends AppCompatActivity {
         final TextView reviewsText = findViewById(R.id.reviews_text);
         final TextView recommendedText = findViewById(R.id.recommended_text);
 
-        String urlStart = "http://10.0.2.2:8080";
+        String urlStart = QueryUtils.startUrl;
         String url = "";
 //        if (mediaType == null && mediaId == 0 && getArguments() != null) {
 //            DetailsFragmentArgs args = DetailsFragmentArgs.fromBundle(getArguments());
@@ -112,12 +117,19 @@ public class DetailsActivity extends AppCompatActivity {
                         final JSONObject jsonObject = new JSONObject(response);
                         getLifecycle().addObserver(youTubePlayerView);
                         final String videoId = jsonObject.getString("trailer");
-                        youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
-                            @Override
-                            public void onReady(@NonNull YouTubePlayer youTubePlayer) {
-                                youTubePlayer.loadVideo(videoId, 0);
-                            }
-                        });
+                        if (!videoId.equals("")) {
+                            mediaImageView.setVisibility(View.GONE);
+                            youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+                                @Override
+                                public void onReady(@NonNull YouTubePlayer youTubePlayer) {
+                                    youTubePlayer.loadVideo(videoId, 0);
+                                }
+                            });
+                        } else {
+                            youTubePlayerView.setVisibility(View.GONE);
+                            mediaImageView.setVisibility(View.VISIBLE);
+                            Picasso.with(getApplicationContext()).load(jsonObject.getString("backdrop_path")).into(mediaImageView);
+                        }
                         nameTextView.setText(jsonObject.getString("title"));
                         if (jsonObject.getString("overview").equals("")) overviewText.setVisibility(View.GONE);
                         else overviewTextView.setText(jsonObject.getString("overview"));
@@ -176,7 +188,7 @@ public class DetailsActivity extends AppCompatActivity {
                             mReviewAdapter1.setOnItemClickListener(new ReviewAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(int position) {
-                                    Intent intent = new Intent(DetailsActivity.this, ReviewsActivity.class);
+                                    Intent intent = new Intent(DetailsActivity.this, ReviewActivity.class);
                                     intent.putExtra("label", reviewItems.get(position).getLabel());
                                     intent.putExtra("rating", reviewItems.get(position).getRating());
                                     intent.putExtra("overview", reviewItems.get(position).getContent());

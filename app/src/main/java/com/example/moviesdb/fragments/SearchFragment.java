@@ -3,7 +3,6 @@ package com.example.moviesdb.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +32,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -90,27 +89,46 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
-//        final EditText searchEditText = rootView.findViewById(R.id.search_edit_text);
-        androidx.appcompat.widget.SearchView searchView = rootView.findViewById(R.id.search_view);
+        final EditText searchEditText = rootView.findViewById(R.id.search_edit_text);
+        ImageView closeImageView = rootView.findViewById(R.id.search_close_button);
+//        androidx.appcompat.widget.SearchView searchView = rootView.findViewById(R.id.search_view);
+//        ImageView closeBtn = (ImageView) searchView.findViewById(R.id.search_close_btn);
+//        closeBtn.setEnabled(false);
+//        closeBtn.setImageDrawable(null);
         TextView noResultText = rootView.findViewById(R.id.search_empty_view);
-        searchView.setIconified(false);
-        searchView.setActivated(true);
+//        searchView.setIconified(false);
+//        searchView.setActivated(true);
         noResultText.setVisibility(View.INVISIBLE);
         mRecyclerView = rootView.findViewById(R.id.search_recycler_view);
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public boolean onQueryTextChange(String newText) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
-                if (newText.length() > 2) {
-                    StringRequest stringRequest = new StringRequest("http://10.0.2.2:8080/apis/search/" + newText, new Response.Listener<String>() {
+                if (s.length() > 0) {
+                    closeImageView.setVisibility(View.VISIBLE);
+                    closeImageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            searchEditText.setText("");
+                        }
+                    });
+                } else {
+                    closeImageView.setVisibility(View.INVISIBLE);
+                }
+                if (s.length() > 2) {
+                    StringRequest stringRequest = new StringRequest(QueryUtils.startUrl + "/apis/search/" + s, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
+                            Log.i("test", response);
                             if (!response.equals("[]")) {
                                 try {
                                     JSONArray jsonArray = new JSONArray(response);
@@ -160,79 +178,13 @@ public class SearchFragment extends Fragment {
                     mRecyclerView.setVisibility(View.INVISIBLE);
                     noResultText.setText("");
                 }
-                return false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
-//        searchEditText.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                RequestQueue requestQueue = Volley.newRequestQueue(Objects.requireNonNull(getContext()));
-//                if (s.length() > 2) {
-//                    StringRequest stringRequest = new StringRequest("http://10.0.2.2:8080/apis/search/" + s, new Response.Listener<String>() {
-//                        @Override
-//                        public void onResponse(String response) {
-//                            Log.i("test", response);
-//                            if (!response.equals("[]")) {
-//                                try {
-//                                    JSONArray jsonArray = new JSONArray(response);
-//                                    mSearchItems = QueryUtils.parseSearchFromResponse(jsonArray);
-//                                    mSearchAdapter = new CardAdapter(mSearchItems, getContext(), "search");
-//                                    mRecyclerView.setAdapter(mSearchAdapter);
-//                                    mSearchAdapter.setOnItemClickListener(new CardAdapter.OnItemClickListener() {
-//                                        @Override
-//                                        public void onItemClick(int position) {
-//                                            String mediaType = mSearchItems.get(position).getType();
-//                                            int mediaId = mSearchItems.get(position).getId();
-//                                            Intent intent = new Intent(getContext(), DetailsActivity.class);
-//                                            intent.putExtra("mediaType", mediaType);
-//                                            intent.putExtra("mediaId", mediaId);
-//                                            startActivity(intent);
-////                                            final NavController navController = Navigation.findNavController(rootView);
-////                                            SearchFragmentDirections.ActionSearchFragmentToDetailsFragment action = SearchFragmentDirections.actionSearchFragmentToDetailsFragment(mediaType, mediaId);
-////                                            navController.navigate(action);
-//
-//                                        }
-//
-//                                        @Override
-//                                        public void onOptionsClick(int position) {
-//
-//                                        }
-//                                    });
-//                                    mRecyclerView.setVisibility(View.VISIBLE);
-//                                    noResultText.setVisibility(View.GONE);
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            } else {
-//                                mRecyclerView.setVisibility(View.INVISIBLE);
-//                                noResultText.setText("No result found.");
-//                                noResultText.setVisibility(View.VISIBLE);
-//                            }
-//                        }
-//                    }, new Response.ErrorListener() {
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            Toast.makeText(getContext(), error.toString(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//
-//                    requestQueue.add(stringRequest);
-//                } else {
-//                    mRecyclerView.setVisibility(View.INVISIBLE);
-//                    noResultText.setText("");
-//                }
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
 
         return rootView;
     }

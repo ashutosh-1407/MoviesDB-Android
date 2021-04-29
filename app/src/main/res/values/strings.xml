@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_title">USC Films</string>
     <string name="top_rated">Top-Rated</string>
     <string name="popular">Popular</string>
     <string name="no_internet">No internet connection.</string>

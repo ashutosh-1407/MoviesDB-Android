@@ -1,18 +1,18 @@
 package com.example.moviesdb.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.moviesdb.R;
 
-public class ReviewsActivity extends AppCompatActivity {
+import android.os.Bundle;
+import android.widget.TextView;
+
+public class ReviewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reviews);
+        setContentView(R.layout.activity_review);
 
         TextView labelTextView = findViewById(R.id.review_label);
         TextView ratingTextView = findViewById(R.id.review_rating);
@@ -21,6 +21,5 @@ public class ReviewsActivity extends AppCompatActivity {
         labelTextView.setText(getIntent().getStringExtra("label"));
         ratingTextView.setText(getIntent().getStringExtra("rating"));
         overviewTextView.setText(getIntent().getStringExtra("overview"));
-
     }
 }

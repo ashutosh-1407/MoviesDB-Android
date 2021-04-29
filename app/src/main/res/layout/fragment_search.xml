@@ -21,45 +21,57 @@
     android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="60dp"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:layout_marginStart="20dp"-->
-<!--        android:layout_marginEnd="20dp">-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp">
 
-<!--        <ImageView-->
-<!--            android:src="@drawable/ic_baseline_search_24"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_weight="2"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center_vertical"/>-->
+        <ImageView
+            android:src="@drawable/ic_baseline_search_24"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"/>
 
-<!--        <EditText-->
-<!--            android:id="@+id/search_edit_text"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_weight="12"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:hint="Search movies and TV"-->
-<!--            android:textColor="@android:color/white"-->
-<!--            android:textColorHint="@android:color/darker_gray"-->
-<!--            android:background="@null"/>-->
+        <EditText
+            android:id="@+id/search_edit_text"
+            android:layout_width="0dp"
+            android:layout_weight="12"
+            android:layout_height="match_parent"
+            android:hint="Search movies and TV"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
+            android:background="@null"/>
 
-<!--    </LinearLayout>-->
+        <ImageView
+            android:id="@+id/search_close_button"
+            android:src="@drawable/ic_baseline_close_24"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:visibility="invisible"/>
 
-<!--    <SearchView-->
+    </LinearLayout>
+
+<!--<LinearLayout-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:orientation="horizontal">-->
+<!--    <ImageView-->
+<!--        android:src="@drawable/ic_baseline_search_24"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:paddingLeft="10dp"-->
+<!--        android:layout_marginEnd="0dp"/>-->
+
+<!--    <androidx.appcompat.widget.SearchView-->
 <!--        android:id="@+id/search_view"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content"-->
-<!--        android:queryHint="Search movies and TV"-->
-<!--        style="@style/MyStyle">-->
-<!--    </SearchView>-->
-
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:queryHint="Search movies and TV"/>
+<!--        app:queryHint="Search movies and TV"-->
+<!--        app:searchHintIcon="@null" />-->
+<!--</LinearLayout>-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_recycler_view"
